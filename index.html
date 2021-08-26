@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+.slidecontainer {
+  width: 70%;
+  margin-top: 2%;
+  margin-left: 0%;
+}
+button,legend{
+  color: rgba(255, 255, 255, 0.945);
+  background-color:black;
+  /* padding: 15px 10px 10px 12px; */
+ border-radius:25px;
+  border: 10px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 80%;
+  height: 15px;
+  border-radius: 15px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+fieldset {
+  margin: 20px;
+  
+  border: 1px solid #666;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #666;
+  padding-top: 10px;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+#category,#chapter,#subject,#topic{
+  background-color:black;
+  color: #fff;
+  font-size: 16px;
+  position:relative;
+  cursor: pointer;
+
+}
+
+.select-css{
+  border-radius: 40px;
+   font-size: 16px;
+   width:60%;
+  height:100%;
+}
+hr.new5 {
+  border: 10px solid black;
+  border-radius: 5px;
+}
+</style>
+</head>
+<body>
+  <div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Ikea_logo.svg/2560px-Ikea_logo.svg.png" alt="W3Schools.com" width="70" 
+    height="30"></div>
+    <hr class = new5> 
+   <fieldset style=" width: 300px; background-color:rgb(238, 208, 73);">
+<center><div class="bodycontainer">
+    <center><h3>Select the price range: (0 - <span id="demo1"></span>)$</h3></center><br>
+    <div class="slidecontainer">
+      <input type="range" min="10" max="10000" value="12" class="slider" id="myRange"><span id="demo1"></span></input>
+      <br><br><center><div id="selection" style="width: 100%;">
+ 
+        <form name="form1" id="form1" action="/action_page.php">
+          <center><h3>Product Type</h3></center><select class="select-css" name="subject" id="subject"  style="margin-right:20px;">
+              <option value="" selected="selected">Select Type</option>
+            </select>
+            <br><br>
+            <center><h3>Sub Category</h3></center><select class="select-css" name="topic" id="topic" style="margin-right:20px;">
+              <option value="" selected="selected">Please select product type</option>
+            </select>
+            <br><br>
+            <center><h3>Products</h3></center><select class="select-css" name="chapter" id="chapter" style="margin-right:20px;">
+              <option value="" selected="selected">Please select sub category</option>
+            </select>
+         
+            
+          </form>
+      </div></center><br> <center><h3>Discounts</h3></center><br>
+      <center><div id="selection" style="width: 100%;">
+        <select class="select-css" name="category" value="Select Category" id="category" style="margin-right:20px;"
+            onchange="populate(this.id,'product')">
+           <option value="Category" disabled selected>Discounts</option>
+            
+            <option value="Furnitures">10% off</option>
+            <option value="Kitchen and Dining">20% off</option>
+            <option value="Chairs">30% off</option>
+            <option value="Shelves">40% off</option>
+            </select>
+      </div></center><br><br>
+      <center><button type="button" class="button1" id="submit" onclick="submit()"><p>Apply filters : 0 - <span id="demo"></span></p></button></center>
+    </div></center>
+  </fieldset>
+</div>
+
+
+<script>
+var subjectObject = {
+  "Kitchen": {
+    "Kitchen appliances": ["METOD interior fittings","Pantry","Wall storage","Kitchen worktops","Kitchen appliances","Kitchen islands & trolleys","Kitchen lighting"],
+    "Taps and Sinks": ["METOD Kitchen taps & sinks", "Splashbacks & wall panels", "Unit kitchens","Knobs & handles"]
+  },
+  "Furnitures": {
+    "Home products": ["Gaming furniture","Furniture sets","Tables & desks","Cabinets & cupboards","TV & media furniture"],
+    "Other": ["Sofas & armchairs","Bookcases & shelving units", "Chest of drawers & drawer units", "Wardrobes"]  
+  },
+  
+ "Beds and Matressess": {
+    "Beds": ["Double beds", "sofa beds","Under bed storage","Bed slats"],
+    "Matressess": ["Mattresses toppers","Spring Mattresses", "Foam & latex mattresses","Mattresses and pillow protectors"]
+  }
+  
+
+}
+window.onload = function() {
+  var subjectSel = document.getElementById("subject");
+  var topicSel = document.getElementById("topic");
+  var chapterSel = document.getElementById("chapter");
+  for (var x in subjectObject) {
+    subjectSel.options[subjectSel.options.length] = new Option(x, x);
+  }
+  subjectSel.onchange = function() {
+    //empty Chapters- and Topics- dropdowns
+    chapterSel.length = 1;
+    topicSel.length = 1;
+    //display correct values
+    for (var y in subjectObject[this.value]) {
+      topicSel.options[topicSel.options.length] = new Option(y, y);
+    }
+  }
+  topicSel.onchange = function() {
+    //empty Chapters dropdown
+    chapterSel.length = 1;
+    //display correct values
+    var z = subjectObject[subjectSel.value][this.value];
+    for (var i = 0; i < z.length; i++) {
+      chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
+    }
+  }
+}
+
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+var output1 = document.getElementById("demo1");
+output.innerHTML = slider.value;
+output1.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+  output1.innerHTML = this.value;
+}
+
+function submit(){
+    const output = document.getElementById("demo");
+    document.getElementById("submit").disabled = true
+    document.getElementById("myRange").disabled = true
+    window.parent.postMessage(
+        JSON.stringify({
+            event_code: "ym-client-event",
+            data: JSON.stringify({
+                event: {
+                    code: "data",
+                    data: {
+                        value: output.innerHTML
+                    },
+                },
+            }),
+        }),
+        console.log(value, "===> this is the log output that is coming after the apply filters")
+        "*"
+    );
+   alert("Filters applied Successfully!!!");
+}
+</script>
+<hr class = new5> 
+</body>
+</html>
